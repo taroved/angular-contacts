@@ -6,15 +6,15 @@ class Auth
 
     public static function get_current_user()
     {
-        if (!self::$current_user) {
+        if (!self::$current_user && isset($_SERVER['PHP_AUTH_USER'])) {
             $username = $_SERVER['PHP_AUTH_USER'];
             $password = $_SERVER['PHP_AUTH_PW'];
-
+            
             $do = DB::get_pdo();
-            $statement = $do->->prepare('SELECT id, name, password, salt FROM contacts WHERE name = ?');
+            $statement = $do->prepare('SELECT id, name, password, salt FROM users WHERE name = ?');
             $statement->execute([$username]);
             $user = $statement->fetchObject();
-            if (sha1($password + $user->salt) == $user->password)
+            if ($user && sha1($password . $user->salt) == $user->password)
                 self::$current_user = $user;
         }
         return self::$current_user;
@@ -22,15 +22,13 @@ class Auth
 
     public static function register_user($user)
     {
-        if (Validator::check_username($user->name)) {
+        if (Validator::is_username_available($user->name)) {
             $salt = self::generateRandomString(40);
-            $password = sha1($user->password + $salt);
+            $password = sha1($user->password . $salt);
 
             $do = DB::get_pdo();
-            $q = "INSERT INTO `users` (`name`, `password`, `salt`)"
-                "(".$do->quote($user->name).",".$do->quote($user->name).","$do->quote($user->).")";
-
-            $do->execute();
+            $statement = $do->prepare('INSERT users (name, password, salt) VALUES (?, ?, ?)');
+            $statement->execute([$user->name, $password, $salt]);
             return true;
         }
         return false;
