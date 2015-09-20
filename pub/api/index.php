@@ -25,7 +25,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
 
 
-if ($method == 'GET' && $uri == '/api/login') {
+if ($method == 'POST' && $uri == '/api/login') {
     if (!Auth::get_current_user()) {
         http_response_code(401); //  Unauthorized
     }

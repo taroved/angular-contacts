@@ -11,6 +11,7 @@
 <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/angular.min.js"></script>
+<script type="text/javascript" src="js/http-auth-interceptor.js"></script>
 <script type="text/javascript" src="js/app.js"></script>
 </head>
 <body>
@@ -82,6 +83,64 @@
                      </div>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="authModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" ng-controller="authController as auth">
+            <div class="modal-header">
+                <h4 class="modal-title">{{auth.showLogin ? 'Login' : 'Registration'}}</h4>
+            </div>
+            <div class="modal-body">
+                <div ng-show="auth.showLogin">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="authLoginName" class="col-sm-2 control-label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="name" class="form-control" id="authLoginName" placeholder="Name" ng-model="loginUser.name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="authLoginPass" class="col-sm-2 control-label">Password</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="authLoginPass" placeholder="Password" ng-model="loginUser.password">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div ng-hide="auth.showLogin">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="authRegName" class="col-sm-3 control-label">Name</label>
+                            <div class="col-sm-9">
+                                <input type="name" class="form-control" id="authRegName" placeholder="Name" ng-model="regUser.name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="authRegPass" class="col-sm-3 control-label">Password</label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" id="authRegPass" placeholder="Password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="authRegPass2" class="col-sm-3 control-label">Repeat password</label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" id="authRegPass2" placeholder="Repeat password">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" ng-show="auth.showLogin">
+                <button type="button" class="btn btn-primary" ng-click="auth.runLogin(loginUser)">Login</button>
+                <button type="button" class="btn btn-link" ng-click="auth.showRegistration()">Register</button>
+            </div>
+            <div class="modal-footer" ng-hide="auth.showLogin">
+                <button type="button" class="btn btn-primary">Register</button>
+                <button type="button" class="btn btn-link" ng-click="auth.showLoginForm()">Login</button>
+            </div>
         </div>
     </div>
 </div>
