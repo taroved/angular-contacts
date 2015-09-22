@@ -9,7 +9,8 @@ class Validator
         ],
         'contact' => [
             'name' => ['required' => null, 'minlength' => 3, 'maxlength' => 60],
-            'email' => ['required' => null, 'minlength' => 3, 'maxlength' => 60, 'email' => null]
+            'email' => ['required' => null, 'minlength' => 3, 'maxlength' => 60,
+                'pattern' => "/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i"] // angularjs email pattern
         ]
     ];
 

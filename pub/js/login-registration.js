@@ -54,8 +54,8 @@ function AuthController($scope, $rootScope, $http, Base64, authService) {
                 $scope.loginForm.invalidPair = false;
                 authService.loginConfirmed(user);  // the func will resend queue of failed requests
             }, function(response){ 
-                console.log(response);
                 $scope.loginForm.invalidPair = true;
+                console.log(response);
             });
         }
         $scope.loginForm.$submitted = true;

@@ -10,7 +10,7 @@ ALTER TABLE `users`
 
 
 CREATE TABLE `contacts` (
-      `int` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
       `user_id` int(11) NOT NULL,
       `name` varchar(60) NOT NULL,
       `email` varchar(60) NOT NULL DEFAULT ''
