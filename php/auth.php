@@ -20,16 +20,18 @@ class Auth
         return self::$current_user;
     }
 
-    public static function register_user($user)
+    public static function register_user($user, &$validation_msgs)
     {
-        if (Validator::is_username_available($user->name)) {
-            $salt = self::generateRandomString(40);
-            $password = sha1($user->password . $salt);
+        if (Validator::is_valid($user, 'user', $validation_msgs)) {
+            if (Validator::is_username_available($user->name, $validation_msgs)) {
+                $salt = self::generateRandomString(40);
+                $password = sha1($user->password . $salt);
 
-            $do = DB::get_pdo();
-            $statement = $do->prepare('INSERT users (name, password, salt) VALUES (?, ?, ?)');
-            $statement->execute([$user->name, $password, $salt]);
-            return true;
+                $do = DB::get_pdo();
+                $statement = $do->prepare('INSERT users (name, password, salt) VALUES (?, ?, ?)');
+                $statement->execute([$user->name, $password, $salt]);
+                return true;
+            }
         }
         return false;
     }

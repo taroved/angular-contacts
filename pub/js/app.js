@@ -1,56 +1,72 @@
-var app = angular.module('contactsApp', ['http-auth-interceptor'])
-    .controller('contactController', ['$http', ContactController]);
+var app = angular.module('contactsApp', ['http-auth-interceptor']);
 
-function ContactController($http) {
-    this.showList = true;
-    this.contact = null;
-    this.contactList = [];
+app.directive('userNameChars', UserNameCharsDirective);
 
-    this.clickAdd = function() {
-        this.showList = false;
-        this.contact = {name:'', email:''};
-    };
+function UserNameCharsDirective() {
+    var isValid = function(s) {
+        return /^[\da-zA-Z_]*$/.test(s);
+    }
 
-    this.cancelEdit = function() {
-        this.showList = true;
-    };
-
-    var t = this;
-    this.updateContacts = function() {
-        $http.get('/api/contacts').
-            then(function(response) {
-                t.contactList = response.data;
-            }, function(response) {
-            console.log(response);
+    return {
+        restict: 'A',
+        require: 'ngModel',
+        link:function (scope, elm, attrs, ngModel) {
+            ngModel.$parsers.unshift(function(value) {
+                ngModel.$setValidity('invalidUserNameChars', isValid(value));
+                return value;
             });
-    };
-    this.updateContacts();
-}
-
-app.controller('authController', ['$scope', '$http', AuthController]);
-
-function AuthController($scope, $http) {
-    this.showLogin = true;
-    $scope.loginUser = {name:"", password:""};
-
-    $scope.$on('event:auth-loginRequired', function(event, data){
-        $('#authModal').modal({backdrop: 'static'});
-    });
-
-    this.showRegistration = function() {
-        this.showLogin = false;
-    };
-
-    this.showLoginForm = function() {
-        this.showLogin = true;
-    };
-
-    this.runLogin = function(user) {
-        $http({
-            method: 'POST',
-            url: '/api/login',
-            headers: {
-
-        })
+        }
     };
 }
+
+app.directive('compareTo', CompareToDirective);
+
+function CompareToDirective() {
+    return {
+        restict: 'A',
+        require: 'ngModel',
+        scope: {
+            otherModelValue: "=compareTo"
+        },
+        link:function (scope, elm, attrs, ngModel) {
+            
+            ngModel.$validators.compareTo = function(modelValue) {
+                return modelValue == scope.otherModelValue;
+            };
+
+            scope.$watch("otherModelValue", function() {
+                ngModel.$validate();
+            });
+        }
+    };
+}
+
+app.directive('userNameAvailable', ['$http', '$location', UserNameAvailableDirective]);
+
+function UserNameAvailableDirective($http, $location) {
+    return {
+        restict: 'A',
+        require: 'ngModel',
+        link:function (scope, elm, attrs, ngModel) {
+            ngModel.$parsers.unshift(function(value) {
+                if (!value)
+                    ngModel.$setValidity('userNameAvailable', true);
+                else
+                    $http({
+                        method: 'GET',
+                        url: '/api/check_username',
+                        params: {name: value}
+                    })
+                    .then(function(response) {
+                        console.log(response.data.inuse);
+                        ngModel.$setValidity('userNameAvailable', !response.data.inuse);
+                    }, function(response){
+                        console.log(response);
+                    });
+                return value;
+            });
+        }
+    };
+}
+
+

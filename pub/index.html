@@ -13,6 +13,9 @@
 <script type="text/javascript" src="js/angular.min.js"></script>
 <script type="text/javascript" src="js/http-auth-interceptor.js"></script>
 <script type="text/javascript" src="js/app.js"></script>
+<script type="text/javascript" src="js/services.js"></script>
+<script type="text/javascript" src="js/login-registration.js"></script>
+<script type="text/javascript" src="js/contacts-crud.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -27,122 +30,18 @@
             <a class="navbar-brand" href="#">Contacts Editor</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav pull-right">
+            <ul class="nav navbar-nav pull-right" ng-show="isLoggedin">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi, Joe! <span class="caret"></span></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi, {{currentUserName}}! <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Logout</a></li>
+                        <li><a href ng-click="logout()">Logout</a></li>
                     </ul>
                 </li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
 </nav>
-<div class="container">
-    <div class="main" ng-controller="contactController as contactCtr">
-        <div ng-show="contactCtr.showList">
-            <button type="button" class="btn btn-primary pull-right top-button" ng-click="contactCtr.clickAdd()">Add Contact</button>
-            <table class="table">
-                <thead>
-                    <th>Name</th>
-                    <th>E-mail</th>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="contact in contactList">
-                        <td>{{contact.name}}</td>
-                        <td>{{contact.email}}</td>
-                    </tr>
-                    <tr ng-hide="controlList"><td colspan="2">No contacts</td></tr>
-                </tbody>
-            </table>
-        </div>
-        <div ng-hide="contactCtr.showList">
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <div class="col-sm-2"></div>
-                    <div class="col-sm-10">
-                        <h1>New Contact</h1>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputName" class="col-sm-2 control-label">Name</label>
-                    <div class="col-sm-10">
-                        <input type="name" class="form-control" id="inputName" placeholder="Name">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputEmail" class="col-sm-2 control-label">E-mail</label>
-                    <div class="col-sm-10">
-                        <input type="email" class="form-control" id="inputEmail" placeholder="Email">
-                    </div>
-                </div>
-                <div class="form-group">
-                     <div class="col-sm-offset-2 col-sm-10">
-                          <button type="submit" class="btn btn-primary">Create</button>
-                          <button type="button" class="btn btn-default" ng-click="contactCtr.cancelEdit()">Cancel</button>
-                     </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="authModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" ng-controller="authController as auth">
-            <div class="modal-header">
-                <h4 class="modal-title">{{auth.showLogin ? 'Login' : 'Registration'}}</h4>
-            </div>
-            <div class="modal-body">
-                <div ng-show="auth.showLogin">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label for="authLoginName" class="col-sm-2 control-label">Name</label>
-                            <div class="col-sm-10">
-                                <input type="name" class="form-control" id="authLoginName" placeholder="Name" ng-model="loginUser.name">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="authLoginPass" class="col-sm-2 control-label">Password</label>
-                            <div class="col-sm-10">
-                                <input type="password" class="form-control" id="authLoginPass" placeholder="Password" ng-model="loginUser.password">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div ng-hide="auth.showLogin">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label for="authRegName" class="col-sm-3 control-label">Name</label>
-                            <div class="col-sm-9">
-                                <input type="name" class="form-control" id="authRegName" placeholder="Name" ng-model="regUser.name">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="authRegPass" class="col-sm-3 control-label">Password</label>
-                            <div class="col-sm-9">
-                                <input type="password" class="form-control" id="authRegPass" placeholder="Password">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="authRegPass2" class="col-sm-3 control-label">Repeat password</label>
-                            <div class="col-sm-9">
-                                <input type="password" class="form-control" id="authRegPass2" placeholder="Repeat password">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer" ng-show="auth.showLogin">
-                <button type="button" class="btn btn-primary" ng-click="auth.runLogin(loginUser)">Login</button>
-                <button type="button" class="btn btn-link" ng-click="auth.showRegistration()">Register</button>
-            </div>
-            <div class="modal-footer" ng-hide="auth.showLogin">
-                <button type="button" class="btn btn-primary">Register</button>
-                <button type="button" class="btn btn-link" ng-click="auth.showLoginForm()">Login</button>
-            </div>
-        </div>
-    </div>
-</div>
+<login-registration></login-registration>
+<contacts-crud></contacts-crud>
 </body>
 </html>

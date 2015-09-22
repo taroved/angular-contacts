@@ -5,3 +5,7 @@
 button.top-button {
     margin-top: 30px;
 }
+
+.help-block.error {
+    color: #a94442;
+}
